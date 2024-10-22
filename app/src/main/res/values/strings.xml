@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DemonAndAndroid</string>
+    <string name="app_title">Demon - Android</string>
+    <string name="main_btn_calc">Calculator</string>
+    <string name="app_test">:)</string>
+</resources>
