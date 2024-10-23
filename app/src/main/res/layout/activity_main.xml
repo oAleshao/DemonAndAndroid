@@ -8,53 +8,53 @@
     android:background="@color/app_background"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_title"
-        android:textColor="@color/app_foreground"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="339dp"
+        android:layout_height="128dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/title_img" />
+
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintWidth_percent="0.6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.6">
 
         <Button
             android:id="@+id/main_btn_calc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_btn_calc"
-            android:background="@color/app_button_background"
-            android:textSize="20sp"
             android:layout_marginTop="40dp"
+            android:background="@color/app_button_background"
+            android:text="@string/main_btn_calc"
             android:textColor="@color/white"
+            android:textSize="20sp"
             app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/main_btn_calc"
-            android:background="@color/app_button_background"
-            android:textSize="20sp"
             android:layout_marginTop="40dp"
-            app:backgroundTint="@null"/>
-    </LinearLayout>
+            android:background="@color/app_button_background"
+            android:textColor="@color/white"
+            android:text="@string/btn_tmp_text"
+            android:textSize="20sp"
+            app:backgroundTint="@null" />
 
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -68,4 +68,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.973" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DemonAndAndroid</string>
-    <string name="app_title">Demon - Android</string>
+    <string name="app_title">Demon \u0026 Android</string>
     <string name="main_btn_calc">Calculator</string>
+    <string name="btn_tmp_text">Your text</string>
     <string name="app_test">:)</string>
 </resources>
