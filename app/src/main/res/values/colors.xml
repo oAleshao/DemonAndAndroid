@@ -5,4 +5,15 @@
     <color name="app_background">#00082D</color>
     <color name="app_foreground">#ffffff</color>
     <color name="app_button_background">#5D007E</color>
+
+    <!-- region Calc -->
+    <color name="calc_layout_background">#00082D</color>
+    <color name="calc_text_color">#fefefe</color>
+    <color name="calc_history_color">#a5a5a5</color>
+    <color name="calc_button_digit">#67008C</color>
+    <color name="calc_button_operation">#46005D</color>
+    <color name="calc_button_equal">#9600B8</color>
+    <!-- endregion -->
+
+
 </resources>
