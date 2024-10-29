@@ -24,10 +24,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         findViewById(R.id.main_btn_calc).setOnClickListener(this::onCalcButtonClick);
+        findViewById(R.id.main_btn_game2048).setOnClickListener(this::onG2048ButtonClick);
     }
 
     private void onCalcButtonClick(View view){
         Intent intent = new Intent(MainActivity.this, CalcActivity.class);
+        startActivity(intent);
+    }
+
+    private void onG2048ButtonClick(View view){
+        Intent intent = new Intent(MainActivity.this, G2048Activity.class);
         startActivity(intent);
     }
 }

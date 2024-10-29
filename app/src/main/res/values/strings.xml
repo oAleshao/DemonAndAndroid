@@ -2,6 +2,7 @@
     <string name="app_name">DemonAndAndroid</string>
     <string name="app_title">Demon \u0026 Android</string>
     <string name="main_btn_calc">Calculator</string>
+    <string name="main_btn_2048">2048</string>
     <string name="btn_tmp_text">Your text</string>
     <string name="app_test">:)</string>
 
@@ -34,8 +35,26 @@
     <string name="calc_btn_digit_8">8</string>
     <string name="calc_btn_digit_9">9</string>
 
+    <string name="calc_msg_too_long">Too many digits</string>
+
+
 
     <!-- endregion -->
 
+    <!-- region 2048 -->
+
+    <string name="g2048_tile_digit_2">2</string>
+    <string name="g2048_tile_digit_4">4</string>
+    <string name="g2048_tile_digit_8">8</string>
+    <string name="g2048_tile_digit_16">16</string>
+    <string name="g2048_tile_digit_32">32</string>
+    <string name="g2048_tile_digit_64">64</string>
+    <string name="g2048_tile_digit_128">128</string>
+    <string name="g2048_tile_digit_256">256</string>
+    <string name="g2048_tile_digit_512">512</string>
+    <string name="g2048_tile_digit_1024">1024</string>
+    <string name="g2048_tile_digit_2048">2048</string>
+
+    <!-- endregion -->
 
 </resources>

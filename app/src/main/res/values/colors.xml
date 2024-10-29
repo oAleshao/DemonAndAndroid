@@ -15,5 +15,30 @@
     <color name="calc_button_equal">#9600B8</color>
     <!-- endregion -->
 
+    <!-- region 2048 -->
+
+    <color name="g2048_layout_background">#F8F6EE</color>
+    <color name="g2048_btn_background">#8E7966</color>
+
+    <color name="g2048_table_color">#BAAC9F</color>
+    <color name="g2048_main_tile_color">#CCC0B3</color>
+    <color name="g2048_tile_2">#ECE3D9</color>
+    <color name="g2048_tile_4">#EBDFC7</color>
+    <color name="g2048_tile_8">#F0B078</color>
+    <color name="g2048_tile_16">#F39463</color>
+    <color name="g2048_tile_32">#F47B5F</color>
+    <color name="g2048_tile_64">#F45E3B</color>
+    <color name="g2048_tile_128">#EBCE71</color>
+    <color name="g2048_tile_256">#EBCB61</color>
+    <color name="g2048_tile_512">#E5C764</color>
+    <color name="g2048_tile_1024">#EBC43F</color>
+    <color name="g2048_tile_2048">#ECC02E</color>
+
+    <color name="g2048_first_text_color">#766D65</color>
+    <color name="g2048_second_text_color">#F5F4F4</color>
+
+    <!-- endregion -->
+
+
 
 </resources>

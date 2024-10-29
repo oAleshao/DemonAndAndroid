@@ -22,4 +22,6 @@
         <item name="android:background">@drawable/calc_btn_equal</item>
     </style>
 
+
+
 </resources>
