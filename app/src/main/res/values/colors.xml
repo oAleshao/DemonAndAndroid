@@ -21,7 +21,7 @@
     <color name="g2048_btn_background">#8E7966</color>
 
     <color name="g2048_table_color">#BAAC9F</color>
-    <color name="g2048_main_tile_color">#CCC0B3</color>
+    <color name="g2048_tile_0">#CCC0B3</color>
     <color name="g2048_tile_2">#ECE3D9</color>
     <color name="g2048_tile_4">#EBDFC7</color>
     <color name="g2048_tile_8">#F0B078</color>
@@ -33,9 +33,22 @@
     <color name="g2048_tile_512">#E5C764</color>
     <color name="g2048_tile_1024">#EBC43F</color>
     <color name="g2048_tile_2048">#ECC02E</color>
+    <color name="g2048_tile_other">#3B3B31</color>
 
-    <color name="g2048_first_text_color">#766D65</color>
-    <color name="g2048_second_text_color">#F5F4F4</color>
+    <color name="g2048_text_0">#CCC0B3</color>
+    <color name="g2048_text_2">#766D65</color>
+    <color name="g2048_text_4">#766D65</color>
+    <color name="g2048_text_8">#F5F4F4</color>
+    <color name="g2048_text_16">#F5F4F4</color>
+    <color name="g2048_text_32">#F5F4F4</color>
+    <color name="g2048_text_64">#F5F4F4</color>
+    <color name="g2048_text_128">#F5F4F4</color>
+    <color name="g2048_text_256">#F5F4F4</color>
+    <color name="g2048_text_512">#F5F4F4</color>
+    <color name="g2048_text_1024">#F5F4F4</color>
+    <color name="g2048_text_2048">#F5F4F4</color>
+    <color name="g2048_text_other">#F5F4F4</color>
+
 
     <!-- endregion -->
 

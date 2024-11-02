@@ -25,10 +25,16 @@ public class MainActivity extends AppCompatActivity {
         });
         findViewById(R.id.main_btn_calc).setOnClickListener(this::onCalcButtonClick);
         findViewById(R.id.main_btn_game2048).setOnClickListener(this::onG2048ButtonClick);
+        findViewById(R.id.main_btn_anim).setOnClickListener(this::onAnimButtonClick);
     }
 
     private void onCalcButtonClick(View view){
         Intent intent = new Intent(MainActivity.this, CalcActivity.class);
+        startActivity(intent);
+    }
+
+    private void onAnimButtonClick(View view){
+        Intent intent = new Intent(MainActivity.this, AnimActivity.class);
         startActivity(intent);
     }
 

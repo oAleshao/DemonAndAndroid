@@ -5,49 +5,54 @@
     android:id="@+id/game_2048"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/g2048_layout_background"
+    android:orientation="vertical"
     tools:context=".G2048Activity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="20"/>
+            android:layout_weight="1"
+            android:text="20" />
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
             </Button>
+
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
+                android:layout_height="wrap_content"></Button>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
             </Button>
+
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Button>
+                android:layout_height="wrap_content"></Button>
 
         </LinearLayout>
 
@@ -57,44 +62,101 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:textAlignment="center"
-        android:text="Get 2048!"/>
+        android:text="Get 2048!"
+        android:textAlignment="center" />
 
     <LinearLayout
         android:id="@+id/g2048_ll_field"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        android:orientation="vertical"
-        android:background="@color/g2048_table_color">
+        android:padding="5dp"
+        android:background="@color/g2048_table_color"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
             <TextView
-                android:id="@+id/g2048_cell_00"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="2"/>
+                android:id="@+id/g2048_tile_00"
+                style="@style/g2048_tile"/>
+
             <TextView
-                android:id="@+id/g2048_cell_01"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="2"/>
+                android:id="@+id/g2048_tile_01"
+                style="@style/g2048_tile" />
+
             <TextView
-                android:id="@+id/g2048_cell_02"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="2"/>
+                android:id="@+id/g2048_tile_02"
+                style="@style/g2048_tile" />
+
             <TextView
-                android:id="@+id/g2048_cell_03"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="2"/>
+                android:id="@+id/g2048_tile_03"
+                style="@style/g2048_tile" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/g2048_tile_10"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_11"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_12"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_13"
+                style="@style/g2048_tile" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/g2048_tile_20"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_21"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_22"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_23"
+                style="@style/g2048_tile" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/g2048_tile_30"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_31"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_32"
+                style="@style/g2048_tile" />
+
+            <TextView
+                android:id="@+id/g2048_tile_33"
+                style="@style/g2048_tile" />
         </LinearLayout>
     </LinearLayout>
 

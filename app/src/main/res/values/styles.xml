@@ -23,5 +23,22 @@
     </style>
 
 
+    <style name="g2048_tile">
+        <item name="android:background">@drawable/game_tile</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="g2048_tile_0" parent="g2048_tile">
+
+    </style>
+
+
+
+
 
 </resources>

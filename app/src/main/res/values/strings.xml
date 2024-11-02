@@ -3,6 +3,7 @@
     <string name="app_title">Demon \u0026 Android</string>
     <string name="main_btn_calc">Calculator</string>
     <string name="main_btn_2048">2048</string>
+    <string name="main_btn_anim">Animation</string>
     <string name="btn_tmp_text">Your text</string>
     <string name="app_test">:)</string>
 
@@ -36,7 +37,6 @@
     <string name="calc_btn_digit_9">9</string>
 
     <string name="calc_msg_too_long">Too many digits</string>
-
 
 
     <!-- endregion -->
