@@ -30,6 +30,9 @@ public class G2048Activity extends AppCompatActivity {
     private final Random random = new Random();
 
     private Animation spawnAnimation, collapseAnimation;
+    private TextView tvScore, tvBestScore;
+    private int score, bestScore, prevBestScore;
+    private boolean userGotNewScore = true;
 
 
     @Override
@@ -47,6 +50,8 @@ public class G2048Activity extends AppCompatActivity {
         collapseAnimation = AnimationUtils.loadAnimation(this, R.anim.g2048_scale);
 
         LinearLayout gameField = findViewById(R.id.g2048_ll_field);
+        tvScore = findViewById(R.id.g2048_tv_score);
+        tvBestScore = findViewById(R.id.g2048_tv_best_score);
         gameField.post(() -> {
             int vw = this.getWindow().getDecorView().getWidth();
             int fieldMargin = 20;
@@ -66,8 +71,12 @@ public class G2048Activity extends AppCompatActivity {
         gameField.setOnTouchListener(new OnSwipeListener(G2048Activity.this) {
             @Override
             public void onSwipeBottom() {
-                Toast.makeText(G2048Activity.this, "Bottom", Toast.LENGTH_SHORT).show();
-            }
+                if (moveBottom()) {
+                    spawnTile();
+                    showField();
+                } else {
+                    Toast.makeText(G2048Activity.this, "No Bottom Move", Toast.LENGTH_SHORT).show();
+                } }
 
             @Override
             public void onSwipeLeft() {
@@ -110,6 +119,7 @@ public class G2048Activity extends AppCompatActivity {
                     } else {
                         if (tiles[i][j] == tiles[i][j0]) {  // collapse
                             tiles[i][j] *= 2;
+                            score += tiles[i][j];
                             tvTiles[i][j].setTag(collapseAnimation);
                             tiles[i][j0] = 0;
                             result = true;
@@ -137,7 +147,7 @@ public class G2048Activity extends AppCompatActivity {
         return result;
     }
 
-    private boolean moveRight(){
+    private boolean moveRight() {
         boolean result = false;
         for (int i = 0; i < N; i++) {
             boolean wasShift;
@@ -152,13 +162,14 @@ public class G2048Activity extends AppCompatActivity {
                     }
 
                 }
-            }while (wasShift);
+            } while (wasShift);
 
-            for (int j = N - 1; j > 0 ; j--) {
-                if(tiles[i][j-1] == tiles[i][j] && tiles[i][j] != 0){
+            for (int j = N - 1; j > 0; j--) {
+                if (tiles[i][j - 1] == tiles[i][j] && tiles[i][j] != 0) {
                     tiles[i][j] *= 2;
+                    score += tiles[i][j];
                     tvTiles[i][j].setTag(collapseAnimation);
-                    tiles[i][j-1] = 0;
+                    tiles[i][j - 1] = 0;
                     for (int k = j - 1; k > 0; k--) {
                         tiles[i][k] = tiles[i][k - 1];
                     }
@@ -168,6 +179,33 @@ public class G2048Activity extends AppCompatActivity {
             }
 
         }
+
+        return result;
+    }
+
+    /*
+
+     bpl method -> for copying array
+
+     * * * 4  03
+     * 2 * 2  13
+     * * * 2  23
+     * * * 4  33
+
+    * */
+
+    private boolean moveBottom() {
+        boolean result = false;
+
+        for (int j = 0; j < N; j++) {
+            for (int i = 0; i < N; i++) {
+                if(tiles[i][j] == tiles[i][j]){
+
+                }
+                tiles[i][j] = 0;
+            }
+        }
+
 
         return result;
     }
@@ -205,8 +243,9 @@ public class G2048Activity extends AppCompatActivity {
                 ));
             }
         }
-
         tiles[0][0] = 0;
+        score = 0;
+        bestScore = prevBestScore = 20;
     }
 
     private void showField() {
@@ -231,12 +270,23 @@ public class G2048Activity extends AppCompatActivity {
                         ),
                         getTheme()
                 ));
-                if(tvTiles[i][j].getTag() instanceof Animation){
+                if (tvTiles[i][j].getTag() instanceof Animation) {
                     tvTiles[i][j].startAnimation((Animation) tvTiles[i][j].getTag());
                     tvTiles[i][j].setTag(null);
                 }
             }
         }
+
+        tvScore.setText(getString(R.string.g2048_tv_score, String.valueOf(score)));
+        if(score > bestScore){
+            bestScore = score;
+            if(bestScore > prevBestScore && userGotNewScore){
+                tvBestScore.startAnimation(collapseAnimation);
+                userGotNewScore = false;
+            }
+        }
+        tvBestScore.setText(getString(R.string.g2048_tv_best, String.valueOf(bestScore)));
+
     }
 
     static class Coordinates {

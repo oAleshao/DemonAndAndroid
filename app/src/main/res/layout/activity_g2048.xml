@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/g2048_layout_background"
     android:orientation="vertical"
-    tools:context=".G2048Activity">
+    tools:context=".G2048Activity"
+    android:clipChildren="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +19,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="20" />
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:background="@drawable/game_tile"
+            android:backgroundTint="@color/g2048_tile_2048"
+            android:textColor="@color/g2048_text_2048"
+            android:layout_margin="10dp"
+            android:paddingVertical="30dp"
+            android:text="2048" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -26,15 +36,32 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/g2048_tv_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/g2048_tv_back"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="14sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:text="SCORE\n100500">
+            </TextView>
 
-            </Button>
-
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></Button>
+                android:id="@+id/g2048_btn_new"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/g2048_tv_back"
+                android:backgroundTint="@color/g2048_tile_64"
+                app:backgroundTint="@null"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="@string/g2048_btn_new"/>
 
         </LinearLayout>
 
@@ -44,15 +71,33 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/g2048_tv_best_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/g2048_tv_back"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:textSize="14sp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:text="BEST\n100500">
+            </TextView>
 
-            </Button>
-
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></Button>
+                android:id="@+id/g2048_btn_undo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/g2048_tv_back"
+                android:backgroundTint="@color/g2048_tile_64"
+                android:textSize="20sp"
+                app:backgroundTint="@null"
+                android:text="@string/g2048_btn_undo"
+                android:textColor="@color/white"
+                />
 
         </LinearLayout>
 
@@ -61,8 +106,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Get 2048!"
+        android:layout_margin="10dp"
+        android:textSize="24sp"
+        android:text="@string/g2048_tv_hint"
+        android:textColor="@color/g2048_text_2"
         android:textAlignment="center" />
 
     <LinearLayout
@@ -71,7 +118,8 @@
         android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:padding="5dp"
-        android:background="@color/g2048_table_color"
+        android:background="@drawable/g2048_tv_back"
+        android:backgroundTint="@color/g2048_table_color"
         android:orientation="vertical">
 
         <LinearLayout
