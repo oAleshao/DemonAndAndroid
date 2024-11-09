@@ -4,6 +4,7 @@
     <string name="main_btn_calc">Calculator</string>
     <string name="main_btn_2048">2048</string>
     <string name="main_btn_anim">Animation</string>
+    <string name="main_btn_chat">Chat</string>
     <string name="btn_tmp_text">Your text</string>
     <string name="app_test">:)</string>
 
@@ -74,6 +75,8 @@
 
     <!-- endregion -->
 
+    <!-- region Chat -->
 
+    <!-- endregion -->
 
 </resources>

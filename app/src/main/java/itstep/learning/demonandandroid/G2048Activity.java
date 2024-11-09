@@ -1,8 +1,11 @@
 package itstep.learning.demonandandroid;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,22 +19,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class G2048Activity extends AppCompatActivity {
 
+    private final String best_score_filename = "best_score.2048";
     private final int N = 4;
     private final int[][] tiles = new int[N][N];
+    private int[][] undoTiles;
     private final TextView[][] tvTiles = new TextView[N][N];
     private final Random random = new Random();
 
     private Animation spawnAnimation, collapseAnimation;
     private TextView tvScore, tvBestScore;
-    private int score, bestScore, prevBestScore;
+    private int score, prevScore, bestScore, prevBestScore;
     private boolean userGotNewScore = true;
 
 
@@ -71,16 +81,20 @@ public class G2048Activity extends AppCompatActivity {
         gameField.setOnTouchListener(new OnSwipeListener(G2048Activity.this) {
             @Override
             public void onSwipeBottom() {
-                if (moveBottom()) {
+                if (canMoveLeft()) {
+                    moveBottom();
                     spawnTile();
                     showField();
                 } else {
                     Toast.makeText(G2048Activity.this, "No Bottom Move", Toast.LENGTH_SHORT).show();
-                } }
+                }
+            }
 
             @Override
             public void onSwipeLeft() {
-                if (moveLeft()) {
+                if (canMoveLeft()) {
+                    saveField();
+                    moveLeft();
                     spawnTile();
                     showField();
                 } else {
@@ -103,13 +117,85 @@ public class G2048Activity extends AppCompatActivity {
                 Toast.makeText(G2048Activity.this, "Top", Toast.LENGTH_SHORT).show();
             }
         });
+        findViewById(R.id.g2048_btn_undo).setOnClickListener(v -> undoMove());
+        findViewById(R.id.g2048_btn_new).setOnClickListener(v -> newGame());
+        newGame();
+    }
+
+    private void showUndoMessage(){
+
+        new AlertDialog.Builder(this)
+                .setTitle("limitation")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("You cannot make a move")
+                .setNeutralButton("Close", (dlg, btn) -> {})
+                .setPositiveButton("Subscribe", (dlg, btn) -> {
+                    Toast.makeText(this, "Soon", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Exit", (dlg, btn) -> {})
+                .setCancelable(false)
+                .show();
+    }
+    private void saveBestScore() {
+        try (FileOutputStream fos = openFileOutput(best_score_filename, Context.MODE_PRIVATE);
+             DataOutputStream writer = new DataOutputStream(fos)) {
+            writer.writeInt(bestScore);
+            writer.flush();
+        } catch (Exception ex) {
+            Log.e("G2048Activity::saveBestScore",
+                    ex.getMessage() != null ? ex.getMessage() : "Error writing file");
+        }
+    }
+
+    private void loadBestScore() {
+        try (FileInputStream fis = openFileInput(best_score_filename);
+             DataInputStream reader = new DataInputStream(fis)) {
+            bestScore = prevBestScore = reader.readInt();
+        } catch (Exception ex) {
+            Log.e("G2048Activity::loadBestScore",
+                    ex.getMessage() != null ? ex.getMessage() : "Error reading file");
+        }
+    }
+
+    private void newGame() {
         initField();
         spawnTile();
         showField();
     }
 
-    private boolean moveLeft() {
-        boolean result = false;
+    private void saveField() {
+        undoTiles = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            System.arraycopy(tiles[i], 0, undoTiles[i], 0, N);
+        }
+        prevScore = score;
+    }
+
+    private void undoMove() {
+        if (undoTiles == null) {
+            showUndoMessage();
+            return;
+        }
+        for (int i = 0; i < N; i++) {
+            System.arraycopy(undoTiles[i], 0, tiles[i], 0, N);
+        }
+        undoTiles = null;
+        score = prevScore;
+        showField();
+    }
+
+    private boolean canMoveLeft() {
+        for (int i = 0; i < N; i++) {
+            for (int j = 1; j < N; j++) {
+                if (tiles[i][j] != 0 && (tiles[i][j - 1] == 0 || tiles[i][j] == tiles[i][j - 1])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void moveLeft() {
         for (int i = 0; i < N; i++) {      // [4 2 2 4]
             int j0 = -1;
             for (int j = 0; j < N; j++) {
@@ -122,7 +208,6 @@ public class G2048Activity extends AppCompatActivity {
                             score += tiles[i][j];
                             tvTiles[i][j].setTag(collapseAnimation);
                             tiles[i][j0] = 0;
-                            result = true;
                             j0 = -1;
                         } else {
                             j0 = j;
@@ -140,11 +225,9 @@ public class G2048Activity extends AppCompatActivity {
                     tiles[i][j0] = tiles[i][j];
                     tiles[i][j] = 0;
                     j0 += 1;
-                    result = true;
                 }
             }
         }
-        return result;
     }
 
     private boolean moveRight() {
@@ -199,7 +282,7 @@ public class G2048Activity extends AppCompatActivity {
 
         for (int j = 0; j < N; j++) {
             for (int i = 0; i < N; i++) {
-                if(tiles[i][j] == tiles[i][j]){
+                if (tiles[i][j] == tiles[i][j]) {
 
                 }
                 tiles[i][j] = 0;
@@ -245,7 +328,7 @@ public class G2048Activity extends AppCompatActivity {
         }
         tiles[0][0] = 0;
         score = 0;
-        bestScore = prevBestScore = 20;
+        loadBestScore();
     }
 
     private void showField() {
@@ -278,12 +361,13 @@ public class G2048Activity extends AppCompatActivity {
         }
 
         tvScore.setText(getString(R.string.g2048_tv_score, String.valueOf(score)));
-        if(score > bestScore){
+        if (score > bestScore) {
             bestScore = score;
-            if(bestScore > prevBestScore && userGotNewScore){
+            if (bestScore > prevBestScore && userGotNewScore) {
                 tvBestScore.startAnimation(collapseAnimation);
                 userGotNewScore = false;
             }
+            saveBestScore();
         }
         tvBestScore.setText(getString(R.string.g2048_tv_best, String.valueOf(bestScore)));
 
