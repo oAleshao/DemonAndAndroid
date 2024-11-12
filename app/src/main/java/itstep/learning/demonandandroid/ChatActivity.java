@@ -31,7 +31,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -46,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText etAuthor;
     private EditText etMessage;
     private String userNick;
+    private final List<ChatMessage> messages = new ArrayList<>();
     private final ExecutorService thredPool = Executors.newFixedThreadPool(3);
     private final Gson gson = new Gson();
 
@@ -119,11 +122,10 @@ public class ChatActivity extends AppCompatActivity {
 
             // Response
             int statusCode = connection.getResponseCode();
-            if(statusCode >= 200 && statusCode <= 300){
+            if (statusCode >= 200 && statusCode <= 300) {
                 Log.i("sendChatMessage", "message sent");
                 loadChat();
-            }
-            else {
+            } else {
                 InputStream responseStream = connection.getErrorStream();
                 Log.e("sendChatMessage", readString(responseStream));
                 responseStream.close();
@@ -161,6 +163,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void displayChatMessages(ChatMessage[] chatMessages) {
+
+        boolean thereIsNew = false;
+        // Check if there are new messages if there are not skip action
+        for (ChatMessage cm : chatMessages) {
+            if (messages.stream().noneMatch(m -> m.getId().equals(cm.getId()))) {
+                messages.add(cm);
+                thereIsNew = true;
+            }
+        }
+
+        if (!thereIsNew) return;
+
         LinearLayout.LayoutParams layoutParams_wrapContent_other = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -177,9 +191,10 @@ public class ChatActivity extends AppCompatActivity {
         Drawable bgOther = getDrawable(R.drawable.chat_msg_other);
         Drawable bgOwn = getDrawable(R.drawable.chat_msg_own);
 
-        runOnUiThread(()-> chatContainer.removeAllViews());
+        runOnUiThread(() -> chatContainer.removeAllViews());
 
-        for (ChatMessage cm : chatMessages) {
+
+        for (ChatMessage cm : messages) {
             LinearLayout ll_message_box = new LinearLayout(ChatActivity.this);
             ll_message_box.setOrientation(LinearLayout.VERTICAL);
 
@@ -203,16 +218,14 @@ public class ChatActivity extends AppCompatActivity {
 
             ll_message_box.addView(author_view);
             ll_message_box.addView(ll_mesage);
-            if(userNick != null && !userNick.isEmpty() && userNick.equals(cm.getAuthor())){
+            if (userNick != null && !userNick.isEmpty() && userNick.equals(cm.getAuthor())) {
                 ll_message_box.setBackground(bgOwn);
                 ll_message_box.setLayoutParams(layoutParams_wrapContent_own);
-            }
-            else {
+            } else {
                 ll_message_box.setBackground(bgOther);
                 ll_message_box.setLayoutParams(layoutParams_wrapContent_other);
 
             }
-
 
             runOnUiThread(() -> chatContainer.addView(ll_message_box));
         }
