@@ -1,10 +1,17 @@
 package itstep.learning.demonandandroid;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -18,9 +25,14 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +41,11 @@ import java.util.concurrent.Executors;
 public class ChatActivity extends AppCompatActivity {
     private final String chatUrl = "https://chat.momentfor.fun/";
     private TextView tvTitle;
-    private LinearLayout llContainer;
+    private LinearLayout chatContainer;
+    private ScrollView chatScroller;
+    private EditText etAuthor;
+    private EditText etMessage;
+    private String userNick;
     private final ExecutorService thredPool = Executors.newFixedThreadPool(3);
     private final Gson gson = new Gson();
 
@@ -44,8 +60,79 @@ public class ChatActivity extends AppCompatActivity {
             return insets;
         });
         tvTitle = findViewById(R.id.chat_tv_title);
-        llContainer = findViewById(R.id.chat_ll_container);
+        chatContainer = findViewById(R.id.chat_ll_container);
+        chatScroller = findViewById(R.id.chat_scroller);
+        etAuthor = findViewById(R.id.chat_et_author);
+        userNick = etAuthor.getText().toString();
+        etMessage = findViewById(R.id.chat_et_message);
+        findViewById(R.id.chat_btn_send).setOnClickListener(this::sendButtonClick);
         loadChat();
+    }
+
+    private static final SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
+
+    private void sendButtonClick(View view) {
+        String author = etAuthor.getText().toString();
+        if (author.isEmpty()) {
+            Toast.makeText(this, "You can't send a message!\n You must write your nick", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        userNick = author;
+        String message = etMessage.getText().toString();
+        if (message.isEmpty()) {
+            Toast.makeText(this, "You can't send a message!\n You must write something", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CompletableFuture.runAsync(() ->
+                sendChatMessage(new ChatMessage()
+                        .setAuthor(author)
+                        .setText(message)
+                        .setMoment(sqlDateFormat.format(new Date()))
+                ), thredPool
+        );
+    }
+
+    private void sendChatMessage(ChatMessage chatMessage) {
+        try {
+            URL url = new URL(chatUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true); // Waiting for response
+            connection.setDoOutput(true); // Send data(body)
+            connection.setChunkedStreamingMode(0); // Send by one pocket (Don't divide for chunks)
+
+            // Configuration for sending data from form
+            connection.setRequestMethod("POST");
+            // Headers
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Connection", "close");
+            // Body
+            OutputStream bodyStream = connection.getOutputStream();
+            // Form's format: key=value1&key2=value2;
+            bodyStream.write(String.format("author=%s&msg=%s",
+                    chatMessage.getAuthor(),
+                    chatMessage.getText()
+            ).getBytes(StandardCharsets.UTF_8));
+            bodyStream.flush(); // Send request
+            bodyStream.close();
+
+            // Response
+            int statusCode = connection.getResponseCode();
+            if(statusCode >= 200 && statusCode <= 300){
+                Log.i("sendChatMessage", "message sent");
+                loadChat();
+            }
+            else {
+                InputStream responseStream = connection.getErrorStream();
+                Log.e("sendChatMessage", readString(responseStream));
+                responseStream.close();
+            }
+            connection.disconnect();
+
+        } catch (Exception ex) {
+            Log.e("Send chat message", ex.getMessage() == null ? "something went wrong while sending message" : ex.getMessage());
+        }
     }
 
     private void loadChat() {
@@ -74,19 +161,60 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void displayChatMessages(ChatMessage[] chatMessages) {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+        LinearLayout.LayoutParams layoutParams_wrapContent_other = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        layoutParams.setMargins(10, 5, 10, 5);
+        layoutParams_wrapContent_other.setMargins(25, 0, 25, 15);
+
+        LinearLayout.LayoutParams layoutParams_wrapContent_own = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams_wrapContent_own.setMargins(25, 0, 25, 15);
+        layoutParams_wrapContent_own.gravity = Gravity.RIGHT | Gravity.CENTER_HORIZONTAL;
+
+        Drawable bgOther = getDrawable(R.drawable.chat_msg_other);
+        Drawable bgOwn = getDrawable(R.drawable.chat_msg_own);
+
+        runOnUiThread(()-> chatContainer.removeAllViews());
 
         for (ChatMessage cm : chatMessages) {
-            TextView tv = new TextView(ChatActivity.this);
-            tv.setText(cm.getAuthor() + "\n   " + cm.getText());
-            tv.setPadding(10, 5, 10, 5);
-            tv.setBackgroundColor(R.drawable.g2048_tv_back);
-            tv.setLayoutParams(layoutParams);
-            runOnUiThread(() -> llContainer.addView(tv));
+            LinearLayout ll_message_box = new LinearLayout(ChatActivity.this);
+            ll_message_box.setOrientation(LinearLayout.VERTICAL);
+
+            TextView author_view = new TextView(ChatActivity.this);
+            author_view.setText(cm.getAuthor());
+            author_view.setPadding(30, 10, 40, 5);
+
+            LinearLayout ll_mesage = new LinearLayout(ChatActivity.this);
+            ll_mesage.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView message_view = new TextView(ChatActivity.this);
+            message_view.setText(cm.getText());
+            message_view.setPadding(30, 5, 40, 10);
+
+            TextView message_moment_view = new TextView(ChatActivity.this);
+            message_moment_view.setText(cm.getTime());
+            message_moment_view.setPadding(0, 5, 20, 0);
+
+            ll_mesage.addView(message_view);
+            ll_mesage.addView(message_moment_view);
+
+            ll_message_box.addView(author_view);
+            ll_message_box.addView(ll_mesage);
+            if(userNick != null && !userNick.isEmpty() && userNick.equals(cm.getAuthor())){
+                ll_message_box.setBackground(bgOwn);
+                ll_message_box.setLayoutParams(layoutParams_wrapContent_own);
+            }
+            else {
+                ll_message_box.setBackground(bgOther);
+                ll_message_box.setLayoutParams(layoutParams_wrapContent_other);
+
+            }
+
+
+            runOnUiThread(() -> chatContainer.addView(ll_message_box));
         }
     }
 
@@ -134,6 +262,7 @@ public class ChatActivity extends AppCompatActivity {
         private String author;
         private String text;
         private String moment;
+        private String time;
 
         public String getId() {
             return id;
@@ -169,6 +298,12 @@ public class ChatActivity extends AppCompatActivity {
         public ChatMessage setMoment(String moment) {
             this.moment = moment;
             return this;
+        }
+
+        public String getTime() {
+            String[] tmp = moment.split(" ");
+            this.time = tmp[1].substring(0, 5);
+            return time;
         }
     }
 }
