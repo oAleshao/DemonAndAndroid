@@ -115,9 +115,10 @@ public class G2048Activity extends AppCompatActivity {
 
             @Override
             public void onSwipeTop() {
-                if (true) {
+                if (canMoveTop()) {
+                    saveField();
                     moveTop();
-//                    spawnTile();
+                    spawnTile();
                     showField();
                 } else {
                     Toast.makeText(G2048Activity.this, "No Top Move", Toast.LENGTH_SHORT).show();
@@ -300,12 +301,19 @@ public class G2048Activity extends AppCompatActivity {
 
     private void moveBottom() {
         for (int j = 0; j < N; j++) {
-            for (int i = 1; i < N; i++) {
-                if (tiles[i][j] == 0 && tiles[i - 1][j] != 0) {
-                    tiles[i][j] = tiles[i - 1][j];
-                    tiles[i - 1][j] = 0;
+
+            boolean wasShift;
+            do {
+                wasShift = false;
+                for (int i = 1; i < N; i++) {
+                    if (tiles[i][j] == 0 && tiles[i - 1][j] != 0) {
+                        tiles[i][j] = tiles[i - 1][j];
+                        tiles[i - 1][j] = 0;
+                        wasShift = true;
+                    }
                 }
-            }
+            } while (wasShift);
+
 
             for (int i = N - 1; i > 0; i--) {
                 if (tiles[i][j] == tiles[i - 1][j] && tiles[i][j] != 0) {
@@ -325,14 +333,33 @@ public class G2048Activity extends AppCompatActivity {
 
     }
 
-    private void moveTop() {
+    private boolean canMoveTop() {
         for (int j = 0; j < N; j++) {
             for (int i = N - 1; i > 0; i--) {
-                if (tiles[i][j] != 0 && tiles[i - 1][j] == 0) {
-                    tiles[i - 1][j] = tiles[i][j];
-                    tiles[i][j] = 0;
+                if (tiles[i][j] != 0 && (tiles[i - 1][j] == 0 || tiles[i][j] == tiles[i - 1][j])) {
+                    return true;
                 }
             }
+        }
+        return false;
+    }
+
+    private void moveTop() {
+        for (int j = 0; j < N; j++) {
+
+            boolean wasShift;
+            do {
+                wasShift = false;
+                for (int i = N - 1; i > 0; i--) {
+                    if (tiles[i][j] != 0 && tiles[i - 1][j] == 0) {
+                        tiles[i - 1][j] = tiles[i][j];
+                        tiles[i][j] = 0;
+                        wasShift = true;
+                    }
+                }
+            } while (wasShift);
+
+
             for (int i = 1; i < N; i++) {
                 if (tiles[i][j] == tiles[i - 1][j] && tiles[i][j] != 0) {
                     tiles[i - 1][j] *= 2;
