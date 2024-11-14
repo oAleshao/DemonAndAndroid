@@ -81,7 +81,8 @@ public class G2048Activity extends AppCompatActivity {
         gameField.setOnTouchListener(new OnSwipeListener(G2048Activity.this) {
             @Override
             public void onSwipeBottom() {
-                if (canMoveLeft()) {
+                if (canMoveBottom()) {
+                    saveField();
                     moveBottom();
                     spawnTile();
                     showField();
@@ -114,7 +115,13 @@ public class G2048Activity extends AppCompatActivity {
 
             @Override
             public void onSwipeTop() {
-                Toast.makeText(G2048Activity.this, "Top", Toast.LENGTH_SHORT).show();
+                if (true) {
+                    moveTop();
+//                    spawnTile();
+                    showField();
+                } else {
+                    Toast.makeText(G2048Activity.this, "No Top Move", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         findViewById(R.id.g2048_btn_undo).setOnClickListener(v -> undoMove());
@@ -122,20 +129,23 @@ public class G2048Activity extends AppCompatActivity {
         newGame();
     }
 
-    private void showUndoMessage(){
+    private void showUndoMessage() {
 
         new AlertDialog.Builder(this)
                 .setTitle("limitation")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setMessage("You cannot make a move")
-                .setNeutralButton("Close", (dlg, btn) -> {})
+                .setNeutralButton("Close", (dlg, btn) -> {
+                })
                 .setPositiveButton("Subscribe", (dlg, btn) -> {
                     Toast.makeText(this, "Soon", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Exit", (dlg, btn) -> {})
+                .setNegativeButton("Exit", (dlg, btn) -> {
+                })
                 .setCancelable(false)
                 .show();
     }
+
     private void saveBestScore() {
         try (FileOutputStream fos = openFileOutput(best_score_filename, Context.MODE_PRIVATE);
              DataOutputStream writer = new DataOutputStream(fos)) {
@@ -277,20 +287,67 @@ public class G2048Activity extends AppCompatActivity {
 
     * */
 
-    private boolean moveBottom() {
-        boolean result = false;
-
+    private boolean canMoveBottom() {
         for (int j = 0; j < N; j++) {
-            for (int i = 0; i < N; i++) {
-                if (tiles[i][j] == tiles[i][j]) {
-
+            for (int i = 1; i < N; i++) {
+                if (tiles[i - 1][j] != 0 && (tiles[i][j] == 0 || tiles[i - 1][j] == tiles[i][j])) {
+                    return true;
                 }
-                tiles[i][j] = 0;
+            }
+        }
+        return false;
+    }
+
+    private void moveBottom() {
+        for (int j = 0; j < N; j++) {
+            for (int i = 1; i < N; i++) {
+                if (tiles[i][j] == 0 && tiles[i - 1][j] != 0) {
+                    tiles[i][j] = tiles[i - 1][j];
+                    tiles[i - 1][j] = 0;
+                }
+            }
+
+            for (int i = N - 1; i > 0; i--) {
+                if (tiles[i][j] == tiles[i - 1][j] && tiles[i][j] != 0) {
+                    tiles[i][j] *= 2;
+                    tiles[i - 1][j] = 0;
+                    score += tiles[i][j];
+                    tvTiles[i - 1][j].setTag(collapseAnimation);
+                    for (int k = i; k > 0; k--) {
+                        if (tiles[k][j] == 0 && tiles[k - 1][j] != 0) {
+                            tiles[k][j] = tiles[k - 1][j];
+                            tiles[k - 1][j] = 0;
+                        }
+                    }
+                }
             }
         }
 
+    }
 
-        return result;
+    private void moveTop() {
+        for (int j = 0; j < N; j++) {
+            for (int i = N - 1; i > 0; i--) {
+                if (tiles[i][j] != 0 && tiles[i - 1][j] == 0) {
+                    tiles[i - 1][j] = tiles[i][j];
+                    tiles[i][j] = 0;
+                }
+            }
+            for (int i = 1; i < N; i++) {
+                if (tiles[i][j] == tiles[i - 1][j] && tiles[i][j] != 0) {
+                    tiles[i - 1][j] *= 2;
+                    tiles[i][j] = 0;
+                    score += tiles[i][j];
+                    tvTiles[i][j].setTag(collapseAnimation);
+                    for (int k = i; k < N - 1; k++) {
+                        if (tiles[k][j] == 0 && tiles[k + 1][j] != 0) {
+                            tiles[k][j] = tiles[k + 1][j];
+                            tiles[k + 1][j] = 0;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private boolean spawnTile() {
