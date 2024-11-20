@@ -24,21 +24,36 @@
             android:text="Author:"/>
         <EditText
             android:id="@+id/chat_et_author"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:minHeight="48dp"
             android:layout_height="wrap_content"
             android:text="0oWinchestero0"/>
+        <View
+            android:id="@+id/chat_bell"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:drawable/ic_popup_reminder"
+            android:backgroundTint="#FFC107" />
+        <ImageView
+            android:id="@+id/chat_img"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/chat_scroller"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:contentDescription="Scroll"
+        android:background="@drawable/chat_back">
+
         <LinearLayout
             android:id="@+id/chat_ll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </ScrollView>
 
     <LinearLayout
@@ -53,12 +68,26 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:text="Your text"/>
         <ImageButton
             android:id="@+id/chat_btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="SendBtn"
             android:src="@android:drawable/ic_menu_send" />
     </LinearLayout>
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/chat_ll_emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
+
 </LinearLayout>
+
